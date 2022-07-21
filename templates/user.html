@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Artlogic</title>
+  <link href="{{ url_for('static',filename='main.css') }}" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    {% if user is not none %}
+    <div class="card">
+      <h3>Username: {{ user['USERNAME'] }}</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Name:</td>
+            <td>{{ user['FIRSTNAME'] }} {{ user['LASTNAME'] }}</td>
+          </tr>
+          <tr>
+            <td>Age:</td>
+            <td>{{ user['AGE'] }}</td>
+          </tr>
+          <tr>
+            <td>Address:</td>
+            <td>{{ user['ADDRESS'] }}</td>
+          </tr>
+          <tr>
+            <td>Salary:</td>
+            <td>{{ user['SALARY'] }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+      <h2>That user does not exist</h2>
+    {% endif %}
+  </div>
+</body>
+</html>

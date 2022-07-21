@@ -96,22 +96,22 @@ def save_data() -> str:
     latest_id = execute("SELECT MAX(ID) AS id FROM COMPANY").rows[0]['id']
 
     try:
-        execute("""INSERT INTO COMPANY
-                (ID, USERNAME, FIRSTNAME, LASTNAME, AGE, ADDRESS, SALARY)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                """, (
-                latest_id + 1,
-                json['USERNAME'],
-                json['FIRSTNAME'],
-                json['LASTNAME'],
-                json['AGE'],
-                json['ADDRESS'],
-                json['SALARY'])
-                )
+        result = execute("""INSERT INTO COMPANY
+                            (ID, USERNAME, FIRSTNAME, LASTNAME, AGE, ADDRESS, SALARY)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)
+                            """, (
+                            latest_id + 1,
+                            json['USERNAME'],
+                            json['FIRSTNAME'],
+                            json['LASTNAME'],
+                            json['AGE'],
+                            json['ADDRESS'],
+                            json['SALARY'])
+                            )
     except:
         return "User could not be created"
 
-    return "User has been created"
+    return f"User No: {result.new_rec_id} has been created"
 
 
 
@@ -122,15 +122,16 @@ def get_data(user_id: int) -> str:
     This endpoint should check for an existing user in the database and output
     that users data in nicely formatted HTML if it exists.
     """
-    user = None
-    try:
-        user = execute("""SELECT USERNAME, FIRSTNAME, LASTNAME, AGE, ADDRESS, SALARY
+
+    result=execute("""SELECT USERNAME, FIRSTNAME, LASTNAME, AGE, ADDRESS, SALARY
                             FROM COMPANY
                             WHERE id = ? """,
                             user_id
-                        ).rows[0]
-    except:
-        pass
+                        )
+    if result.found_count > 0:
+        user = result.rows[0]
+    else:
+        user = None
 
     return render_template("user.html", user=user)
 

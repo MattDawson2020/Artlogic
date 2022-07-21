@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from database import execute
 
 app = Flask(__name__)
 
+limiter = Limiter(app, key_func=get_remote_address)
 
 """
 In the following task you will make use of the execute function to retrieve and
@@ -51,12 +54,14 @@ You can use -p port to specify a port
 """
 
 @app.route("/")
+@limiter.limit("10/minute")
 def hello():
     response_body = 'Hello World! <br/><br/>' + \
                    'Welcome to a simple Python web application'
     return response_body
 
 @app.route("/username=<username>")
+@limiter.limit("10/minute")
 def hello_name(username):
     """
     In flask GET parameters can be passed to python functions by specifying them
@@ -68,7 +73,9 @@ def hello_name(username):
     response_body = 'Hello {}'.format(username)
     return response_body
 
+
 @app.route("/users/new/", methods=["POST"])
+@limiter.limit("10/minute")
 def save_data() -> str:
     """
     This endpoint should receive data through a POST request, output it as JSON
@@ -109,6 +116,7 @@ def save_data() -> str:
 
 
 @app.route("/users/<user_id>/")
+@limiter.limit("10/minute")
 def get_data(user_id: int) -> str:
     """
     This endpoint should check for an existing user in the database and output

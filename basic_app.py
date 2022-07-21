@@ -68,8 +68,6 @@ def hello_name(username):
     response_body = 'Hello {}'.format(username)
     return response_body
 
-# curl -X POST http://localhost:5000/users/new/ -H 'Content-Type: application/json' -d '{"USERNAME": "Mattdawson", "FIRSTNAME": "Matt", "LASTNAME": "Dawson", "AGE": "28", "ADDRESS": "England", "SALARY": "Lots"}'
-# use curl to test routes as we have no front end
 @app.route("/users/new/", methods=["POST"])
 def save_data() -> str:
     """
@@ -78,7 +76,7 @@ def save_data() -> str:
     """
     json = request.get_json()
     print(json)
-     # get and output as json
+
     if (
         not json['USERNAME'] or
         not json['FIRSTNAME'] or
@@ -86,13 +84,10 @@ def save_data() -> str:
         not json['AGE']
         ):
         return "Missing required information"
-    # no frontend to validate so should have something here
-    # ordinarily would use a package, have done it this way for now to keep it simple
+
 
     latest_id = execute("SELECT MAX(ID) AS id FROM COMPANY").rows[0]['id']
-    # ordinarily I would use SERIAL PRIMARY KEY in db to generate new id
-    # changing db structure seems outside what i'm asked to to so this grabs latest id
-    # to increment
+
     try:
         execute("""INSERT INTO COMPANY
                 (ID, USERNAME, FIRSTNAME, LASTNAME, AGE, ADDRESS, SALARY)
@@ -128,8 +123,7 @@ def get_data(user_id: int) -> str:
                         ).rows[0]
     except:
         pass
-    # would uusually use something like this to send to React for display
-    # return jsonify(result)
+
     return render_template("user.html", user=user)
 
 if __name__ == '__main__':
